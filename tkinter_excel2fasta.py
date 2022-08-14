@@ -17,15 +17,13 @@ l = tk.Label(root_window, text='', bg='green', font=('Arial', 12), width=800, he
 l.pack()
 
 selected_col = []
-all_variable=[]
-
-def generateAllCol(checkNum):
-    all_variable.append(checkNum)
+column_names = []
+all_variable = []
 
 
 
 
-def add_column(column,checkV):
+def add_column(column, checkV):
     state = checkV.get()
     print(state)
     if state == 1:
@@ -37,43 +35,38 @@ def print_selection():
 
 
 def sequence_choose():
-    print(all_variable)
-    for key_val_col in set(all_variable):
-        for key in key_val_col.keys():
-            if key_val_col[key]==1:
-                c = tk.Radiobutton(root_window, text=key,
-                                   command=print_selection, variable=var, value=key_val_col[key]
-                                   ).pack(side='left')
-
+    for i in range(all_variable.__len__()):
+        if all_variable[i].get()==1:
+            r2 = tk.Radiobutton(root_window, text=column_names[i], variable=var, value=column_names[i], command=print_selection)
+            r2.pack()
 
 def excute(file_path):
-
     if file_path.endswith('xls') or file_path.endswith('xlsx'):
         global data
 
         data = pd.read_excel(file_path)
         number = 0
+        
+        #print(column_names)
         for column in data.columns:
+            column_names.append(column)
             number += 1
+            checkV = tk.IntVar()
             if number <= 5:
-                checkNum={}
-                c = tk.Checkbutton(root_window, text=column, onvalue={number:1}, offvalue={number:0}
-                                   , variable=checkNum,command='generateAllCol(checkNum)').place(x=number * 200, y=100, width=200, height=30)
-
+                c = tk.Checkbutton(root_window, text=column, onvalue=1, offvalue=0
+                                   , variable=checkV)
+                c.place(x=number * 200, y=100, width=200, height=30)
             elif 5 < number < 11:
-                checkV = tk.IntVar()
                 c = tk.Checkbutton(root_window, text=column, onvalue=1, offvalue=0
-                                   , variable=checkNum).place(x=(number - 5) * 200, y=145, width=200, height=30)
+                                   , variable=checkV).place(x=(number - 5) * 200, y=145, width=200, height=30)
             elif 11 <= number < 16:
-                checkV = tk.IntVar()
                 c = tk.Checkbutton(root_window, text=column, onvalue=1, offvalue=0
-                                   , variable=checkNum).place(x=(number - 10) * 200, y=190, width=200, height=30)
+                                   , variable=checkV).place(x=(number - 10) * 200, y=190, width=200, height=30)
             else:
-                checkV = tk.IntVar()
                 c = tk.Checkbutton(root_window, text=column, onvalue=1, offvalue=0
-                                   , variable=checkNum).place(x=(number - 15) * 200, y=235, width=200, height=30)
+                                   , variable=checkV).place(x=(number - 15) * 200, y=235, width=200, height=30)
+            all_variable.append(checkV)
         b3 = tk.Button(root_window, text='选择序列', width=15, height=2, command=sequence_choose)
-
         b3.pack(side='left', anchor='nw')
 
         # l2 = tk.Label(root_window, text='选择序列', bg='green', width=50, font=('Arial', 12), height=15)
@@ -85,7 +78,7 @@ def excute(file_path):
 def openfile():
     global file_path
     file_path = filedialog.askopenfilename(title="Select a File", filetypes=(
-         ("excel", "*.xlsx"), ("excel", "*.xls"),("csv", "*.csv")))
+        ("excel", "*.xlsx"), ("excel", "*.xls"), ("csv", "*.csv")))
     excute(file_path)
 
 
