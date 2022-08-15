@@ -20,15 +20,30 @@ selected_col = []
 column_names = []
 all_variable = []
 
-
-
-
-def add_column(column, checkV):
-    state = checkV.get()
-    print(state)
-    if state == 1:
-        selected_col.append(column)
-
+def execute_file():
+    l2 = tk.Label(root_window, text='文件生成中.....', bg='green', width=200, font=('Arial', 12), height=15)
+    l2.pack()
+    gene_pro_col = var.get()
+    noduplicate_col = set(selected_col)
+    noduplicate_col.remove(gene_pro_col)
+    data['new_name'] = ""
+    flag = True
+    for col in noduplicate_col:
+        if flag:
+            data['new_name'] = data[col].map(str)
+            flag=False
+        else:
+            data['new_name'] = data['new_name'].map(str) + "-" + data[col].map(str)
+    endpoint = file_path.rindex(".")
+    file_path_new = file_path[0:endpoint]+".fasta"
+    new_data = data[['new_name',gene_pro_col]]
+    with open(file_path_new,'a+') as f :
+        for i in range(new_data.shape[0]):
+            f.write(">"+str(new_data.iloc[i,0]))
+            f.write("\n")
+            f.write(new_data.iloc[i,1])
+            f.write("\n")
+    l2.config(text='文件已创建，请关闭窗口')
 
 def print_selection():
     l.config(text='You have selected ' + var.get())
@@ -37,9 +52,10 @@ def print_selection():
 def sequence_choose():
     for i in range(all_variable.__len__()):
         if all_variable[i].get()==1:
-            r2 = tk.Radiobutton(root_window, text=column_names[i], variable=var, value=column_names[i], command=print_selection)
+            selected_col.append(column_names[i])
+            r2 = tk.Radiobutton(root_window, text=column_names[i], variable=var, value=column_names[i], command=execute_file)
             r2.pack()
-
+    print (selected_col)
 def excute(file_path):
     if file_path.endswith('xls') or file_path.endswith('xlsx'):
         global data
