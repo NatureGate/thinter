@@ -24,6 +24,7 @@ def execute_file():
     l2 = tk.Label(root_window, text='文件生成中.....', bg='green', width=200, font=('Arial', 12), height=15)
     l2.pack()
     gene_pro_col = var.get()
+    print(gene_pro_col)
     noduplicate_col = set(selected_col)
     noduplicate_col.remove(gene_pro_col)
     data['new_name'] = ""
@@ -78,9 +79,12 @@ def excute(file_path):
             elif 11 <= number < 16:
                 c = tk.Checkbutton(root_window, text=column, onvalue=1, offvalue=0
                                    , variable=checkV).place(x=(number - 10) * 200, y=190, width=200, height=30)
-            else:
+            elif 16<=number<21:
                 c = tk.Checkbutton(root_window, text=column, onvalue=1, offvalue=0
                                    , variable=checkV).place(x=(number - 15) * 200, y=235, width=200, height=30)
+            else:
+                c = tk.Checkbutton(root_window, text=column, onvalue=1, offvalue=0
+                                   , variable=checkV).place(x=(number - 20) * 200, y=280, width=200, height=30)
             all_variable.append(checkV)
         b3 = tk.Button(root_window, text='选择序列', width=15, height=2, command=sequence_choose)
         b3.pack(side='left', anchor='nw')
